@@ -1,0 +1,28 @@
+import * as tokenService from './tokenService'
+import { Profile } from '../types/models'
+
+const BASE_URL = `${import.meta.env.VITE_REACT_APP_BACK_END_SERVER_URL}/api/profiles`
+
+async function getAllProfiles(){
+  try {
+    const res = await fetch(BASE_URL, {
+      headers: { 'Authorization': `Bearer ${tokenService.getToken()}` },
+    })
+    return await res.json()
+  } catch (error) {
+    throw error
+  }
+}
+
+async function addPhoto(photoData: any, profileId: number) {
+  const res = await fetch(`${BASE_URL}/${profileId}/add-photo`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${tokenService.getToken()}`
+    },
+    body: photoData
+  })
+  return await res.json()
+}
+
+export { getAllProfiles, addPhoto }
