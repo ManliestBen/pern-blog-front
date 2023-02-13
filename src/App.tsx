@@ -8,6 +8,7 @@ import Login from './pages/Login/Login'
 import Landing from './pages/Landing/Landing'
 import Profiles from './pages/Profiles/Profiles'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
+import Posts from './pages/Posts/Posts'
 
 // components
 import NavBar from './components/NavBar/NavBar'
@@ -16,16 +17,18 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 // services
 import * as authService from './services/authService'
 import * as profileService from './services/profileService'
+import * as postService from './services/postService'
 
 // styles
 import './App.css'
 
 // types
-import { User, Profile } from './types/models'
+import { User, Profile, Post } from './types/models'
 
 function App(): JSX.Element {
   const [user, setUser] = useState<User | null>(authService.getUser())
   const [profiles, setProfiles] = useState<Profile[]>([])
+  const [posts, setPosts] = useState<Post[]>([])
   const navigate = useNavigate()
 
   useEffect((): void => {
@@ -33,6 +36,8 @@ function App(): JSX.Element {
       try {
         const profileData: Profile[] = await profileService.getAllProfiles()
         setProfiles(profileData)
+        const postData: Post[] = await postService.getAllPosts()
+        setPosts(postData)
       } catch (error) {
         console.log(error)
       }
@@ -67,7 +72,19 @@ function App(): JSX.Element {
           path="/profiles"
           element={
             <ProtectedRoute user={user}>
-              <Profiles />
+              <Profiles
+                profiles={profiles}
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/posts"
+          element={
+            <ProtectedRoute user={user}>
+              <Posts
+                posts={posts}
+              />
             </ProtectedRoute>
           }
         />

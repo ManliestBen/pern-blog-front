@@ -2,24 +2,20 @@ import { useState, useEffect } from 'react'
 import * as profileService from '../../services/profileService'
 import { Profile } from '../../types/models'
 
-const Profiles = () => {
-  const [profiles, setProfiles] = useState([])
+interface ProfilesProps {
+  profiles: Profile[]
+}
 
-  useEffect(() => {
-    const fetchProfiles = async () => {
-      const profileData = await profileService.getAllProfiles()
-      setProfiles(profileData)
-    }
-    fetchProfiles()
-  }, [])
-
-  if(!profiles.length) return <p>No profiles yet</p>
+const Profiles = ({ profiles }: ProfilesProps) => {
+  if(!profiles.length) return <h1>Loading...</h1>
 
   return (
     <>
-      <h1>Hello. This is a list of all the profiles.</h1>
       {profiles.map((profile: Profile) =>
-        <p key={profile.id.toString()}>{profile.name}</p>
+      <div key={profile.id.toString()}>
+        <p>{profile.name}</p>
+        <img height={'100px'} src={profile.photo ? profile.photo : 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png'} alt="profile" />
+      </div>
       )}
     </>
   )
